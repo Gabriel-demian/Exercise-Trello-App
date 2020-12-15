@@ -1,4 +1,4 @@
-package com.proy.excercise.dto;
+package com.proy.excercise.pojo;
 
 import java.util.Date;
 
