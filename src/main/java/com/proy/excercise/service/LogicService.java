@@ -1,4 +1,4 @@
-package com.proy.excercise;
+package com.proy.excercise.service;
 
 import java.util.Random;
 
