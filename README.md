@@ -22,7 +22,8 @@ Or you can fill the application.properties
 
 <details>
   <summary>Screenshot application.properties</summary>
-
+ 
+![app properties](https://user-images.githubusercontent.com/57782295/102374769-7e3a4f80-3fa0-11eb-861a-0fb05c8273e3.PNG)
 
 </details>
 
