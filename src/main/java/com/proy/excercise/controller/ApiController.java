@@ -101,9 +101,6 @@ public class ApiController {
 		if(task.equalsIgnoreCase(type)) {
 			if(!title.isBlank()) {
 				
-				//Queda comentado en caso de que todas las tareas tengan que ir a la lista ToDo
-				//String idList = env.getProperty("trello.toDo.list.id");
-				
 				String idList = "";
 				String idLabel = "";
 				
