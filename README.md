@@ -18,17 +18,41 @@
 
 POST BUG \
 curl --location --request POST 'http://localhost:8080/api?type=bug&description=Cockpit%20is%20not%20depressurizing%20correctly'
-![post bug](https://user-images.githubusercontent.com/57782295/102370402-c73bd500-3f9b-11eb-877d-fca55bc5a458.PNG)
+
+<details>
+  <summary>Click to expand!</summary>
+
+  ![post bug](https://user-images.githubusercontent.com/57782295/102370402-c73bd500-3f9b-11eb-877d-fca55bc5a458.PNG)
+
+</details>
 
 POST ISSUE \
 curl --location --request POST 'http://localhost:8080/api?title=Send%20message&type=issue&description=Let%20pilots%20send%20messages%20to%20Central'
+
+<details>
+  <summary>Click to expand!</summary>
+ 
 ![post issue](https://user-images.githubusercontent.com/57782295/102370425-cdca4c80-3f9b-11eb-9eef-d9f35673dcef.PNG)
+
+</details>
 
 POST TASK \
 curl --location --request POST 'http://localhost:8080/api?type=task&title=Clean%20the%20Rocket&category=Maintenance'
+
+<details>
+  <summary>Click to expand!</summary>
+ 
 ![post task](https://user-images.githubusercontent.com/57782295/102370444-d15dd380-3f9b-11eb-9896-e40628066bb3.PNG)
+
+</details>
 
 GET MEMBERS \
 curl --location --request GET 'http://localhost:8080/api'
+
+<details>
+  <summary>Click to expand!</summary>
+ 
 ![get members](https://user-images.githubusercontent.com/57782295/102372384-e89dc080-3f9d-11eb-99bf-310c98ac8f15.PNG)
+ 
+ </details>
 
