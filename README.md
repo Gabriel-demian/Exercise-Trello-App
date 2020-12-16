@@ -4,6 +4,13 @@
  documentation from Trello Api: https://developer.atlassian.com/cloud/trello/rest/ \
  Http used for this app at localhost:  "http://localhost:8080/api"
  
+ This application is a bridge between Trello and other Apps. We can create 3 diferent types of cards (An issue, A bug and A task).
+ 
+ 1.	An issue: This represents a business feature that needs implementation, they will provide a short title and a description. All issues gets added to the “To Do” list as unassigned \
+ 2.	A bug: This represents a problem that needs fixing. They will only provide a description, the title needs to be randomized with the following pattern: bug-{word}-{number}. It doesn't matter that they repeat internally. The bugs should be assigned to a random member of the board and have the “Bug” label. \
+ 3.	A task: This represents some manual work that needs to be done. It will count with just a title and a category (Maintenance, Research, or Test) each corresponding to a label in trello.  \
+
+ 
  # Arguments of the application:
  
  The ids of the board, card or labels can be obtained from the board url after you add ".json" at the end.. Example:  https://trello.com/b/{BOARDID}/the-example-board.json 
