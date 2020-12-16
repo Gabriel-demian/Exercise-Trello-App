@@ -1,18 +1,30 @@
 # Exercise Trello App
  
  
- Documentación de Trello: https://developer.atlassian.com/cloud/trello/rest/ \
- Http:  "http://localhost:8080/api"
+ documentation from Trello Api: https://developer.atlassian.com/cloud/trello/rest/ \
+ Http used for this app at localhost:  "http://localhost:8080/api"
  
- #Argumentos de la aplicación:
+ # Arguments of the application:
  
- Los id se consiguen agregando la extensión .json en la URL del tablero. Ejemplo:  https://trello.com/b/{BOARDID}/the-example-board.json 
+ The ids of the board, card or labels can be obtained from the board url after you add ".json" at the end.. Example:  https://trello.com/b/{BOARDID}/the-example-board.json 
  
- Se dejan las url ya que son de uso general, por lo que se deja de ejemplo de relleno. 
+ The urls are left because they are for general use, I leave it as an example.
  
  --trello.key= --trello.token= --trello.bug.label.id= --trello.test.list.id= --trello.research.list.id= --trello.maintenance.list.id= --trello.toDo.list.id= --trello.board.id= --trello.board.url=https://api.trello.com/1/boards --trello.card.url=https://api.trello.com/1/cards --trello.maintenance.label.id= --trello.research.label.id= --trello.test.label.id=
-
+<details>
+  <summary>Screenshot Arguments of eclipse app</summary>
+ 
 ![Arguments](https://user-images.githubusercontent.com/57782295/102372370-e5a2d000-3f9d-11eb-8af3-8eaad833b0be.PNG)
+ 
+</details>
+
+Or you can fill the application.properties 
+
+<details>
+  <summary>Screenshot application.properties</summary>
+
+
+</details>
 
 # Some URLs and Screenshots
 
