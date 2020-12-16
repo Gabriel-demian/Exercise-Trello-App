@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.proy.excercise.pojo.Member;
 import com.proy.excercise.service.LogicService;
 
 
@@ -29,7 +31,7 @@ public class ApiController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public HttpStatus createTask(
+	public HttpStatus createCard(
 			@RequestParam (required = false) String title,
 			@RequestParam (required = false) String type,
 			@RequestParam (required = false) String description,
@@ -47,9 +49,7 @@ public class ApiController {
 		String test = "Test";
 		
 		String url = urlTrello+"?key=" + key + "&token=" + token;
-		
-		
-		
+	
 		/**
 		 * An issue must have a short title and a description. All issues gets added to the “To Do” list as unassigned
 		 */
@@ -67,16 +67,25 @@ public class ApiController {
 		
 		/**
 		 * The title needs to be randomized with the following pattern: bug-{word}-{number} and have the “Bug” label.
+		 * getAllMembersId will bring an array of members and will call the method getRandomNumber to get a random number to assign the member to the bug. 
 		 */
 		if(bug.equalsIgnoreCase(type)) {
 			
 			title="";
 			
+			
+			Member[] objects = getAllMembersId("id");
+			int random = logic.getRandomNumber(0, objects.length-1);
+			String member = objects[random].getId();
+			
+			System.out.println("The magic number is "+ random + " and the member is the id: " + objects[random].getId());
+			
 			if(!(description.isBlank())) {
 				
 				title = title.concat("Bug-"+logic.getWordString()+"-"+logic.getNumString());
 				
-				url = url.concat("&idList=" + env.getProperty("trello.toDo.list.id") + "&name=" + title + "&idLabels=" + env.getProperty("trello.bug.label.id"));
+				url = url.concat("&idList=" + env.getProperty("trello.toDo.list.id") 
+							+ "&name=" + title + "&idLabels=" + env.getProperty("trello.bug.label.id") + "&idMembers=" + member);
 			}else {
 				System.out.println("****Catch-Bug-URL******* "+url);
 				return HttpStatus.BAD_REQUEST;
@@ -94,26 +103,33 @@ public class ApiController {
 		if(task.equalsIgnoreCase(type)) {
 			if(!title.isBlank()) {
 				
+				//Queda comentado en caso de que todas las tareas tengan que ir a la lista ToDo
+				//String idList = env.getProperty("trello.toDo.list.id");
+				
 				String idList = "";
+				String idLabel = "";
 				
 				if(mant.equalsIgnoreCase(category)) {
 					
 					idList = env.getProperty("trello.maintenance.list.id");
+					idLabel = env.getProperty("trello.maintenance.label.id");
 					
 				}else if(res.equalsIgnoreCase(category)) {
 					
 					idList = env.getProperty("trello.research.list.id");
+					idLabel = env.getProperty("trello.research.label.id");
 					
 				}else if(test.equalsIgnoreCase(category)) {
 					
 					idList = env.getProperty("trello.test.list.id");
+					idLabel = env.getProperty("trello.test.label.id");
 					
 				}else {
 					System.out.println("****Category not acepted******* "+url);
 					return HttpStatus.NOT_FOUND;
 				}
 				
-				url = url.concat("&idList=" + idList + "&name=" + title );
+				url = url.concat("&idList=" + idList + "&name=" + title + "&idLabels=" + idLabel);
 				
 			}else {
 				System.out.println("****Catch-Task-URL******* "+url);
@@ -139,20 +155,17 @@ public class ApiController {
 	}
 	
 	
-	
+	/**
+	 * This method is only a get to know from Postman all the Members
+	 * @return
+	 */
 	@GetMapping
 	public Object[] getAllMembers() {
 		
 		/**
-		 * parameters needed for the members request
+		 * logic.getUrlName() generates the URL for the get method (to get the members)
 		 */
-		String key = env.getProperty("trello.key");
-		String token = env.getProperty("trello.token");
-		String boardId = env.getProperty("trello.board.id");
-		String urlTrelloBoard = env.getProperty("trello.board.url");
-		
-		
-		String url = urlTrelloBoard+"/"+boardId+"/members?key="+key+"&token="+token;
+		String url = logic.getMembersUrl();
 		
 		Object[] objects = null;
 		
@@ -170,6 +183,41 @@ public class ApiController {
 		}
 		
 		System.out.println("****Ok-Get-URL******* "+url);
+		return objects;
+	}
+
+	
+	/**
+	 * This method is called when we create a new bug. To get a variety of members to be randomly selected.
+	 * @param id
+	 * @return Member[]
+	 */
+	@GetMapping(path = "/{id}")
+	public Member[] getAllMembersId(
+			@PathVariable  String id
+			) {
+		
+		/**
+		 * logic.getUrlName() generates the URL for the get method (to get the members)
+		 */
+		String url = logic.getMembersUrl();
+		
+		Member[] objects = null;
+		
+		try {
+			
+			RestTemplate rt = new RestTemplate();
+			
+			ResponseEntity<Member[]> responseEntity = rt.getForEntity(url, Member[].class);
+			
+			objects = responseEntity.getBody();
+			
+		} catch (RestClientException e) {
+			System.out.println("****Catch-Get-ID-URL******* "+url);
+			e.printStackTrace();
+		}
+		
+		System.out.println("****Ok-Get-ID-URL******* "+url);
 		return objects;
 	}
 	
