@@ -72,7 +72,6 @@ public class ApiController {
 			
 			title="";
 			
-			
 			Member[] objects = getAllMembers();
 			int random = logic.getRandomNumber(0, objects.length-1);
 			String member = objects[random].getId();
