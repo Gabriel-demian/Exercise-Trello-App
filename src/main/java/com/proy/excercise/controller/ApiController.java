@@ -5,7 +5,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,7 +73,7 @@ public class ApiController {
 			title="";
 			
 			
-			Member[] objects = getAllMembersId("id");
+			Member[] objects = getAllMembers();
 			int random = logic.getRandomNumber(0, objects.length-1);
 			String member = objects[random].getId();
 			
@@ -155,47 +154,13 @@ public class ApiController {
 	}
 	
 	
-	/**
-	 * This method is only a get to know from Postman all the Members
-	 * @return
-	 */
-	@GetMapping
-	public Object[] getAllMembers() {
-		
-		/**
-		 * logic.getUrlName() generates the URL for the get method (to get the members)
-		 */
-		String url = logic.getMembersUrl();
-		
-		Object[] objects = null;
-		
-		try {
-			
-			RestTemplate rt = new RestTemplate();
-			
-			ResponseEntity<Object[]> responseEntity = rt.getForEntity(url, Object[].class);
-			
-			objects = responseEntity.getBody();
-			
-		} catch (RestClientException e) {
-			System.out.println("****Catch-Get-URL******* "+url);
-			e.printStackTrace();
-		}
-		
-		System.out.println("****Ok-Get-URL******* "+url);
-		return objects;
-	}
-
 	
 	/**
-	 * This method is called when we create a new bug. To get a variety of members to be randomly selected.
-	 * @param id
+	 * This method is called when we create a new bug. To get the members to be randomly selected.
 	 * @return Member[]
 	 */
-	@GetMapping(path = "/{id}")
-	public Member[] getAllMembersId(
-			@PathVariable  String id
-			) {
+	@GetMapping
+	public Member[] getAllMembers() {
 		
 		/**
 		 * logic.getUrlName() generates the URL for the get method (to get the members)
