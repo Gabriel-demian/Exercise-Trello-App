@@ -83,7 +83,7 @@ public class ApiController {
 				title = title.concat("Bug-"+logic.getWordString()+"-"+logic.getNumString());
 				
 				url = url.concat("&idList=" + env.getProperty("trello.toDo.list.id") 
-							+ "&name=" + title + "&idLabels=" + env.getProperty("trello.bug.label.id") + "&idMembers=" + member);
+							+ "&name=" + title + "&desc=" + description + "&idLabels=" + env.getProperty("trello.bug.label.id") + "&idMembers=" + member);
 			}else {
 				System.out.println("****Catch-Bug-URL******* "+url);
 				return HttpStatus.BAD_REQUEST;
