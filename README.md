@@ -1,5 +1,6 @@
 # Exercise Trello App
  
+ Ejercicio:  [The Space-x team.docx](https://github.com/Gabriel-demian/Exercise-Trello-App/files/5764879/The.Space-x.team.docx)
  
  documentation from Trello Api: https://developer.atlassian.com/cloud/trello/rest/ \
  Http used for this app at localhost:  "http://localhost:8080/api"
