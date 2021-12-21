@@ -31,20 +31,20 @@ public class LogicService {
     }
 
 	public String getNumString() {
-        String NUM_CHARS = "1234567890";
-        return getString(NUM_CHARS);
+        String num_chars = "1234567890";
+        return getString(num_chars);
     }
 	
 	public String getWordString() {
-        String ALPHABET_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return getString(ALPHABET_CHARS);
+        String alphabet_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return getString(alphabet_chars);
     }
 
-    private String getString(String CHARS) {
+    private String getString(String chars) {
         StringBuilder salt = new StringBuilder();
         while (salt.length() < 5) { // length of the random string.
-            int index = rnd.nextInt() * CHARS.length();
-            salt.append(CHARS.charAt(index));
+            int index = rnd.nextInt() * chars.length();
+            salt.append(chars.charAt(index));
         }
         return salt.toString();
     }
@@ -61,7 +61,7 @@ public class LogicService {
 		
 		return urlTrelloBoard+"/"+boardId+"/members?key="+key+"&token="+token;
 	}
-	
+
 	public int getRandomNumber(int min, int max) {
 		return ThreadLocalRandom.current().nextInt(min, max);
 	}
