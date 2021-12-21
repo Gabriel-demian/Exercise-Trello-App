@@ -1,5 +1,7 @@
 package com.proy.excercise.service;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,45 +11,43 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LogicService {
-	
-	@Autowired
-	private Environment env;
-	
-	public String getNumString() {
-		
-        String SALTCHARS = "1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 5) { // length of the random string.
-        	
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-            
-        }
-        String saltStr = salt.toString();
-        
-        return saltStr;
 
+    public LogicService() throws NoSuchAlgorithmException {
+    }
+
+    private Environment env;
+
+    @Autowired
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
+
+    /**
+     * Creating a new Random object each time a random value is needed is inefficient
+     * and may produce numbers which are not random depending on the JDK.
+     */
+    private Random rnd = SecureRandom.getInstanceStrong(); // SecureRandom is preferred to Random
+
+	public String getNumString() {
+        String NUM_CHARS = "1234567890";
+        return getString(NUM_CHARS);
     }
 	
 	public String getWordString() {
-		
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 5) { // length of the random string.
-        	
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-            
-        }
-        String saltStr = salt.toString();
-        
-        return saltStr;
-
+        String ALPHABET_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return getString(ALPHABET_CHARS);
     }
-	
-	/**
+
+    private String getString(String CHARS) {
+        StringBuilder salt = new StringBuilder();
+        while (salt.length() < 5) { // length of the random string.
+            int index = rnd.nextInt() * CHARS.length();
+            salt.append(CHARS.charAt(index));
+        }
+        return salt.toString();
+    }
+
+    /**
 	 * Generates the URL for the get method (to get the members)
 	 */
 	public String getMembersUrl() {
@@ -57,16 +57,11 @@ public class LogicService {
 		String boardId = env.getProperty("trello.board.id");
 		String urlTrelloBoard = env.getProperty("trello.board.url");
 		
-		String url = urlTrelloBoard+"/"+boardId+"/members?key="+key+"&token="+token;
-		
-		return url;
+		return urlTrelloBoard+"/"+boardId+"/members?key="+key+"&token="+token;
 	}
 	
 	public int getRandomNumber(int min, int max) {
-		
-		int randomNum = ThreadLocalRandom.current().nextInt(min, max);
-
-		return randomNum;
+		return ThreadLocalRandom.current().nextInt(min, max);
 	}
 	
 }
