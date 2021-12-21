@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class LogicService {
 
-    public LogicService() throws NoSuchAlgorithmException {
-    }
 
     private Environment env;
 
@@ -27,6 +25,10 @@ public class LogicService {
      * and may produce numbers which are not random depending on the JDK.
      */
     private Random rnd = SecureRandom.getInstanceStrong(); // SecureRandom is preferred to Random
+
+    public LogicService() throws NoSuchAlgorithmException {
+        // this code is necessary for the SecureRandom.getInstanceStrong() method.
+    }
 
 	public String getNumString() {
         String NUM_CHARS = "1234567890";
