@@ -20,13 +20,19 @@ import com.proy.excercise.service.LogicService;
 @RestController
 @RequestMapping("/api")
 public class ApiController {
-	
-	@Autowired
+
 	private Environment env;
-	
-	@Autowired
 	private LogicService logic;
 
+	@Autowired
+	public void setEnv(Environment env) {
+		this.env = env;
+	}
+
+	@Autowired
+	public void setLogic(LogicService logic) {
+		this.logic = logic;
+	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
