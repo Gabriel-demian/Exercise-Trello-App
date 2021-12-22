@@ -1,20 +1,18 @@
 package com.proy.excercise.controller;
 
+import com.proy.excercise.pojo.Label;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.proy.excercise.pojo.Member;
 import com.proy.excercise.service.LogicService;
+
+import java.security.NoSuchAlgorithmException;
 
 
 @RestController
@@ -36,11 +34,14 @@ public class ApiController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+
 	public HttpStatus createCard(
-			@RequestParam (required = false) String title,
+			/**@RequestParam (required = false) String title,
 			@RequestParam (required = false) String type,
 			@RequestParam (required = false) String description,
-			@RequestParam (required = false) String category){
+			@RequestParam (required = false) String category**/
+			@RequestBody Label label
+			) throws NoSuchAlgorithmException {
 		
 		String urlTrello = env.getProperty("trello.card.url");
 		String key = env.getProperty("trello.key");
@@ -58,10 +59,10 @@ public class ApiController {
 		/**
 		 * An issue must have a short title and a description. All issues gets added to the “To Do” list as unassigned
 		 */
-		if(issue.equalsIgnoreCase(type)) {
-			if(!(title.isBlank() || description.isBlank())) {
-				
-				url = url.concat("&idList=" + env.getProperty("trello.toDo.list.id") + "&name=" + title + "&desc=" + description);
+		if(issue.equalsIgnoreCase(label.getType())) {
+			if(!(label.getTittle().isBlank() || label.getDescription().isBlank())) {
+
+				url = url.concat("&idList=" + env.getProperty("trello.toDo.list.id") + "&name=" + label.getTittle() + "&desc=" + label.getDescription());
 				
 			}else {
 				System.out.println("****Catch-Issue-URL******* "+url);
@@ -74,9 +75,9 @@ public class ApiController {
 		 * The title needs to be randomized with the following pattern: bug-{word}-{number} and have the “Bug” label.
 		 * getAllMembersId will bring an array of members and will call the method getRandomNumber to get a random number to assign the member to the bug. 
 		 */
-		if(bug.equalsIgnoreCase(type)) {
-			
-			title="";
+		if(bug.equalsIgnoreCase(label.getType())) {
+
+			label.setTittle("");
 			
 			Member[] objects = getAllMembers();
 			int random = logic.getRandomNumber(0, objects.length-1);
@@ -84,12 +85,12 @@ public class ApiController {
 			
 			System.out.println("The magic number is "+ random + " and the member is the id: " + objects[random].getId());
 			
-			if(!(description.isBlank())) {
-				
-				title = title.concat("Bug-"+logic.getWordString()+"-"+logic.getNumString());
+			if(!(label.getDescription().isBlank())) {
+
+				label.setTittle(label.getTittle().concat("Bug-"+logic.getWordString()+"-"+logic.getNumString()));
 				
 				url = url.concat("&idList=" + env.getProperty("trello.toDo.list.id") 
-							+ "&name=" + title + "&desc=" + description + "&idLabels=" + env.getProperty("trello.bug.label.id") + "&idMembers=" + member);
+							+ "&name=" + label.getTittle() + "&desc=" + label.getDescription() + "&idLabels=" + env.getProperty("trello.bug.label.id") + "&idMembers=" + member);
 			}else {
 				System.out.println("****Catch-Bug-URL******* "+url);
 				return HttpStatus.BAD_REQUEST;
@@ -104,23 +105,23 @@ public class ApiController {
 		 * If the category doesn't match it will return 404 Not Found.
 		 * A task must have a title.
 		 */
-		if(task.equalsIgnoreCase(type)) {
-			if(!title.isBlank()) {
+		if(task.equalsIgnoreCase(label.getType())) {
+			if(!label.getTittle().isBlank()) {
 				
 				String idList = "";
 				String idLabel = "";
 				
-				if(mant.equalsIgnoreCase(category)) {
+				if(mant.equalsIgnoreCase(label.getCategory())) {
 					
 					idList = env.getProperty("trello.maintenance.list.id");
 					idLabel = env.getProperty("trello.maintenance.label.id");
 					
-				}else if(res.equalsIgnoreCase(category)) {
+				}else if(res.equalsIgnoreCase(label.getCategory())) {
 					
 					idList = env.getProperty("trello.research.list.id");
 					idLabel = env.getProperty("trello.research.label.id");
 					
-				}else if(test.equalsIgnoreCase(category)) {
+				}else if(test.equalsIgnoreCase(label.getCategory())) {
 					
 					idList = env.getProperty("trello.test.list.id");
 					idLabel = env.getProperty("trello.test.label.id");
@@ -130,7 +131,7 @@ public class ApiController {
 					return HttpStatus.NOT_FOUND;
 				}
 				
-				url = url.concat("&idList=" + idList + "&name=" + title + "&idLabels=" + idLabel);
+				url = url.concat("&idList=" + idList + "&name=" + label.getTittle() + "&idLabels=" + idLabel);
 				
 			}else {
 				System.out.println("****Catch-Task-URL******* "+url);

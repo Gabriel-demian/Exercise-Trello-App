@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class LogicService {
 
-
     private Environment env;
 
     @Autowired
@@ -20,27 +19,22 @@ public class LogicService {
         this.env = env;
     }
 
-    /**
-     * Creating a new Random object each time a random value is needed is inefficient
-     * and may produce numbers which are not random depending on the JDK.
-     */
-    private Random rnd = SecureRandom.getInstanceStrong(); // SecureRandom is preferred to Random
-
-    public LogicService() throws NoSuchAlgorithmException {
-        // this code is necessary for the SecureRandom.getInstanceStrong() method.
-    }
-
-	public String getNumString() {
+    public String getNumString() throws NoSuchAlgorithmException {
         String num_chars = "1234567890";
         return getString(num_chars);
     }
 	
-	public String getWordString() {
+	public String getWordString() throws NoSuchAlgorithmException {
         String alphabet_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return getString(alphabet_chars);
     }
 
-    private String getString(String chars) {
+    /**
+     * Creating a new Random object each time a random value is needed is inefficient
+     * and may produce numbers which are not random depending on the JDK.
+     */
+    public String getString(String chars) throws NoSuchAlgorithmException {
+        Random rnd = SecureRandom.getInstanceStrong();
         StringBuilder salt = new StringBuilder();
         while (salt.length() < 5) { // length of the random string.
             int index = rnd.nextInt() * chars.length();
